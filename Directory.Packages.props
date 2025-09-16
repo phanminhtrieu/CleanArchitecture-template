@@ -44,7 +44,7 @@
     <!-- Swagger / API Docs -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-    <!-- Aspire (chỉ cần nếu bạn xài Aspire/OTel) -->
+    <!-- Aspire -->
     <!--#if (aspire) -->
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.6.0" />
