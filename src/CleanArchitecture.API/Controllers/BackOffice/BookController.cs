@@ -2,7 +2,6 @@
 using CleanArchitecture.UseCases.Books;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 
 namespace CleanArchitecture.API.Controllers.Backoffice
 {
