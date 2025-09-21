@@ -1,7 +1,9 @@
-﻿namespace CleanArchitecture.Core.Interfaces.BookServices
+﻿using CleanArchitecture.Shared.CrossCuttingConcerns.Dtos.Results;
+
+namespace CleanArchitecture.Core.Interfaces.BookServices
 {
     public interface IDeleteBookService
     {
-        public Task<int> DeleteBookAsync(int bookId);
+        public Task<ApiResult<int>> DeleteBookAsync(int bookId, CancellationToken cancellationToken);
     }
 }

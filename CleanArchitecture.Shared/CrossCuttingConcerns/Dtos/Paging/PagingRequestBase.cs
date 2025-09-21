@@ -6,8 +6,8 @@
         public int PageSize { get; set; } = 100;
         public string? SearchBy { get; set; }
         public string? TextSearch { get; set; }
-        public string? OrderCol { get; set; }
-        public string? OrderDir { get; set; }
+        public string? OrderCol { get; set; } = "Id";
+        public string? OrderDir { get; set; } = "ASC";
         public int? LanguageId { get; set; }
     }
 }

@@ -1,7 +1,9 @@
-﻿using CleanArchitecture.API.Common.Errors;
+﻿using CleanArchitecture.Shared.Common.Errors;
+using System.Diagnostics.CodeAnalysis;
 
-namespace CleanArchitecture.API.Common.Exceptions
+namespace CleanArchitecture.Shared.Common.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public class UserFriendlyException : Exception
     {
         public string UserFriendlyMessage { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.API.Common.Errors.Messages
+﻿namespace CleanArchitecture.Shared.Common.Errors.Messages
 {
     public static class UserErrorMessage
     {

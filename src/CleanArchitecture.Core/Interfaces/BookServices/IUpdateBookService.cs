@@ -5,6 +5,6 @@ namespace CleanArchitecture.Core.Interfaces.BookServices
 {
     public interface IUpdateBookService
     {
-        public Task<ApiResult<int>> UpdateBookAsyn(BookRequest request, CancellationToken cancellationToken);
+        Task<ApiResult<int>> UpdateBookAsyn(int bookId, BookRequest request, CancellationToken cancellationToken);
     }
 }

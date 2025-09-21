@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Shared.CrossCuttingConcerns.Dtos.Paging
+﻿namespace CleanArchitecture.Shared.CrossCuttingConcerns.Dtos.Paging
 {
     public class DataTablePagedResult<T> : PagedResultBase where T : class
     {

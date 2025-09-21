@@ -11,6 +11,11 @@ namespace CleanArchitecture.Core.Helper.GaurdClause
             {
                 throw new TException();
             }
+
+            if (argument is string str && string.IsNullOrWhiteSpace(str))
+            {
+                throw new TException();
+            }
         }
     }
 }

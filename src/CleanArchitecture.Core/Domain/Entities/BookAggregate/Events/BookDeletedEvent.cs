@@ -14,18 +14,11 @@ namespace CleanArchitecture.Core.Domain.Entities.BookAggregate.Events
         }
     }
 
-    internal class BookDeletedEventHandler : INotificationHandler<BookDeletedEvent>
+    internal class BookDeletedEventHandler(ILogger<BookDeletedEventHandler> _logger) : INotificationHandler<BookDeletedEvent>
     {
-        private readonly ILogger<BookDeletedEventHandler> _logger;
-
-        public BookDeletedEventHandler(ILogger<BookDeletedEventHandler> logger)
-        {
-            _logger = logger;
-        }
-
         public Task Handle(BookDeletedEvent notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Deleted event: {notification.BookId}");
+            _logger.LogInformation($"Book Deleted event: {notification.BookId}");
 
             // Send an email or something else ...
 

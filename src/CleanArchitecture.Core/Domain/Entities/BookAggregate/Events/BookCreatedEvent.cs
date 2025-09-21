@@ -1,6 +1,4 @@
-﻿using CleanArchitecture.Core.Domain.Entities;
-using CleanArchitecture.Core.Domain.Entities.BookAggregate;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Core.Domain.Entities.BookAggregate.Events
@@ -33,7 +31,7 @@ namespace CleanArchitecture.Core.Domain.Entities.BookAggregate.Events
 
         public Task Handle(BookCreatedEvent notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Created event: {notification.Book.Id} - {notification.Book.Title} - {notification.Book.Status}");
+            _logger.LogInformation($"Book Created event: {notification.Book.Id} - {notification.Book.Title} - {notification.Book.Status}");
 
             // Send an email
 

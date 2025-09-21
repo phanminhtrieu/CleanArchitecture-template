@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.API.Common.Errors;
-using CleanArchitecture.API.Common.Exceptions;
-using CleanArchitecture.Core.Domain.Constants;
+﻿using CleanArchitecture.Core.Domain.Constants;
+using CleanArchitecture.Shared.Common.Errors;
+using CleanArchitecture.Shared.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 

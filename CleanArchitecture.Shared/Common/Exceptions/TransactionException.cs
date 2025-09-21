@@ -1,8 +1,10 @@
-﻿using CleanArchitecture.API.Common.Errors;
-using CleanArchitecture.API.Common.Errors.Messages;
+﻿using CleanArchitecture.Shared.Common.Errors;
+using CleanArchitecture.Shared.Common.Errors.Messages;
+using System.Diagnostics.CodeAnalysis;
 
-namespace CleanArchitecture.API.Common.Exceptions
+namespace CleanArchitecture.Shared.Common.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public static class TransactionException
     {
         public static UserFriendlyException TransactionNotCommitException()

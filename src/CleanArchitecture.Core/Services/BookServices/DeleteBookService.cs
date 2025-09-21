@@ -1,36 +1,37 @@
-﻿using CleanArchitecture.Core.Interfaces.BookServices;
+﻿using CleanArchitecture.Core.Domain.Entities.BookAggregate.Specifications;
+using CleanArchitecture.Core.Interfaces.BookServices;
 using CleanArchitecture.Core.Repositories;
 using CleanArchitecture.Core.UnitOfWork;
-using MediatR;
+using CleanArchitecture.Shared.Common.Exceptions;
+using CleanArchitecture.Shared.CrossCuttingConcerns.Dtos.Results;
 using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Core.Services.BookServices
 {
-    public class DeleteBookService : IDeleteBookService
+    public class DeleteBookService(
+        IBookRepository _bookRepository,
+        IUnitOfWork _unitOfWork,
+        ILogger<DeleteBookService> _logger) : IDeleteBookService
     {
-        private readonly IBookRepository _bookRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMediator _mediator;
-        private readonly ILogger<DeleteBookService> _logger;
-
-        public DeleteBookService(
-            IBookRepository bookRepository,
-            IUnitOfWork unitOfWork,
-            IMediator mediator, 
-            ILogger<DeleteBookService> logger)
+        public async Task<ApiResult<int>> DeleteBookAsync(int bookId, CancellationToken cancellationToken)
         {
-            _bookRepository = bookRepository;
-            _unitOfWork = unitOfWork;
-            _mediator = mediator;
-            _logger = logger;
-        }
+            _logger.LogInformation($"Deleting Book {bookId}");
 
-        public async Task<int> DeleteBookAsync(int bookId)
-        {
-            _logger.LogInformation("Deleting Book {bookId}", bookId);
-            //Book? aggregateToDelete = await //TODO: add repository
+            var bookByIdSpec = new BookByIdSpec(bookId);
+            var book = await _bookRepository.GetAsync(bookByIdSpec);
 
-            throw new NotImplementedException();
+            var isBookExisted = book != null;
+
+            if (!isBookExisted)
+            {
+                _logger.LogWarning($"Book {bookId} not found");
+
+                throw UserException.InternalServerException(null);
+            }
+
+            _bookRepository.Remove(bookId);
+
+            return new ApiSuccessResult<int>(await _unitOfWork.SaveChangesAsync(cancellationToken));
         }
     }
 }

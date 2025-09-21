@@ -9,8 +9,8 @@ namespace CleanArchitecture.API.Extensions
     {
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder, AppSettings appSettings)
         {
-            builder.Services.AddApplicationService(appSettings);
-            builder.Services.AddInfrastructureServices(appSettings);
+            builder.Services.AddApplicationServiceDI(appSettings);
+            builder.Services.AddInfrastructureServicesDI(appSettings);
             builder.Services.AddWebAPIService(appSettings);
 
             //MediatR

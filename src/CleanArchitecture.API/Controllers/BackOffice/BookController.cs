@@ -15,12 +15,34 @@ namespace CleanArchitecture.API.Controllers.Backoffice
             _mediator = mediator;
         }
 
-        //[HttpGet("paging")]
-        //public async Task<IActionResult > GetBooksByPaging([FromQuery] ManageBookPagingRequest request, CancellationToken cancellationToken)
-        //{
-        //    var result = await _mediator.Send(new GetBooksByPagingQuery(request), cancellationToken);
-        //    return Ok(result);
-        //}
+        /// <summary>
+        /// List all books by paging
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("paging")]
+        public async Task<IActionResult> ListBooksByPaging([FromQuery] ManageBookPagingRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new ListBookByPagingQuery(request), cancellationToken);
+
+            if(result.IsSucceeded) return BadRequest(result);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// List all books
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet()]
+        public async Task<IActionResult> ListBooks(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new ListBooksQuery(), cancellationToken);
+
+            if (result.IsSucceeded) return BadRequest(result);
+            return Ok(result);
+        }
 
         /// <summary>
         /// Get book by Id
@@ -32,17 +54,52 @@ namespace CleanArchitecture.API.Controllers.Backoffice
         public async Task<IActionResult> GetBookById(int id, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetBookByIdQuery(id), cancellationToken);
+
+            if (result.IsSucceeded) return BadRequest(result);
             return Ok(result);
         }
 
         /// <summary>
-        /// Add new Book
+        /// Create a new Book
         /// </summary>
         /// <returns></returns>
         [HttpPost("")]
         public async Task<IActionResult> CreateBook([FromBody] BookRequest request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new CreateBookCommand(request), cancellationToken);
+
+            if (result.IsSucceeded) return BadRequest(result);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Update a book
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new UpdateBookCommand(id, request), cancellationToken);
+
+            if (result.IsSucceeded) return BadRequest(result);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Delete a book
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeleteBookCommand(id), cancellationToken);
+
+            if (result.IsSucceeded) return BadRequest(result);
             return Ok(result);
         }
     }

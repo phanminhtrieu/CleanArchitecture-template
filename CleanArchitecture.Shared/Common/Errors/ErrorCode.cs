@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.API.Common.Errors
+﻿namespace CleanArchitecture.Shared.Common.Errors
 {
     public enum ErrorCode
     {

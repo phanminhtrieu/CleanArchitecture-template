@@ -14,7 +14,7 @@ namespace CleanArchitecture.Infrastructure
 {
     public static class ConfigureServices
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, AppSettings appSettings)
+        public static IServiceCollection AddInfrastructureServicesDI(this IServiceCollection services, AppSettings appSettings)
         {
             if (appSettings.UseInMemoryDatabase)
             {

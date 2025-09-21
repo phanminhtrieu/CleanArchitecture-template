@@ -35,6 +35,15 @@ namespace CleanArchitecture.Core.Domain.Entities.BookAggregate
 
             return book;
         }
+
+        public void Update(BookTitle title, BookAuthor author, BookStatus status)
+        {
+            Title = title;
+            Author = author;
+            Status = status;
+
+            AddDomainEvent(new BookUpdatedEvent(this));
+        }
     }
 
     [Owned]
@@ -48,13 +57,13 @@ namespace CleanArchitecture.Core.Domain.Entities.BookAggregate
 
         public BookTitle(string title)
         {
+            // Implememt Guard Clause
             Guard.AgainstNullOrEmpty<BookTitleEmptyException>(title);
             Value = title;
         }
     }
 
     [Owned]
-    [DisplayColumn("Author")]
     public record BookAuthor : IValueObject 
     {
         [Column("Author")]

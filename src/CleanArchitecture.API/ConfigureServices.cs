@@ -66,11 +66,8 @@ namespace CleanArchitecture.API
         {
             var mediatRAssemblies = new[]
             {
-                // Book
-                Assembly.GetAssembly(typeof(Book)), // Core
-                Assembly.GetAssembly(typeof(CreateBookCommand)), // UseCases
-                Assembly.GetAssembly(typeof(BookResponse)),
-                Assembly.GetAssembly(typeof(GetBookByIdQuery)),
+                Assembly.GetAssembly(typeof(Book)), // Core Assembly, dont need to register more at this assembly
+                Assembly.GetAssembly(typeof(CreateBookCommand)), // UseCases Assembly, dont need to register more at this assembly
             };
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(mediatRAssemblies!))
