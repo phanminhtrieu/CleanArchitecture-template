@@ -13,7 +13,7 @@ namespace CleanArchitecture.Infrastructure.Services
             _mediator = mediator;
         }
 
-        public async Task DispatchAndClearEvents(IEnumerable<EntityBase<object>> entitiesWithEvents)
+        public async Task DispatchAndClearEvents(IEnumerable<EntityBase<int>> entitiesWithEvents)
         {
             foreach (var entity in entitiesWithEvents)
             {

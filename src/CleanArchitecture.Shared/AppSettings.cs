@@ -49,6 +49,8 @@ namespace CleanArchitecture.Shared
 
     public class MailConfigurations
     {
+        public string DisplayName { get; set; }
+        public string UserName { get; set; }
         [Required]
         public string From { get; set; }
         [Required]
@@ -57,13 +59,14 @@ namespace CleanArchitecture.Shared
         public string Password { get; set; }
         [Required]
         public int Port { get; set; }
+        public bool UseSSL { get; set; }
+        public bool UseStartTls { get; set; }
     }
 
     public class RequestResponse
     {
         public bool IsEnabled { get; set; } = true;
     }
-
 
     public class CloudinarySettings
     {
@@ -74,6 +77,7 @@ namespace CleanArchitecture.Shared
         [Required]
         public string ApiSecret { get; set; } = string.Empty;
     }
+
     public class FileStorageSettings
     {
         public bool LocalStorage { get; set; } = true;

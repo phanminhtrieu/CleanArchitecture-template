@@ -22,7 +22,7 @@ namespace CleanArchitecture.Infrastructure.Data
 
             // Retrieve all tracked entities that have domain events
             var entitiesWithEvents = eventData.Context.ChangeTracker
-                .Entries<EntityBase<object>>()
+                .Entries<EntityBase<int>>() // TODO: Make generic
                 .Select(e => e.Entity)
                 .Where(e => e.DomainEvents.Any())
                 .ToArray();
