@@ -1,25 +1,16 @@
+using CleanArchitecture.API.Common.Exceptions;
+using CleanArchitecture.API.Extensions;
+using CleanArchitecture.Shared;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var configuration = builder.Configuration.Get<AppSettings>()
+    ?? throw ProgramException.AppsettingNotSetException();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton(configuration);
+var app = await builder.ConfigureServices(configuration).ConfigurePipelineAsync(configuration);
 
-var app = builder.Build();
+await app.RunAsync();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+// This line for intergration test
+public partial class Program { }
