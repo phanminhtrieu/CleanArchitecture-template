@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Core.Domain.Entities;
+﻿using CleanArchitecture.Core.Interfaces.MailServices;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -14,13 +14,14 @@ namespace CleanArchitecture.Core.Domain.Entities.BookAggregate.Events
         }
     }
 
-    internal class BookDeletedEventHandler(ILogger<BookDeletedEventHandler> _logger) : INotificationHandler<BookDeletedEvent>
+    internal class BookDeletedEventHandler(ILogger<BookDeletedEventHandler> _logger, IEmailService _emailService) : INotificationHandler<BookDeletedEvent>
     {
         public Task Handle(BookDeletedEvent notification, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Book Deleted event: {notification.BookId}");
 
             // Send an email or something else ...
+            _emailService.SendEmailAsync("currentuser@gmail.com", "Book Deleted Event", $"Book Deleted event: {notification.BookId}");
 
             return Task.CompletedTask;
         }

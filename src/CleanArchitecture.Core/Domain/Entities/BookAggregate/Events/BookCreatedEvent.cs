@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CleanArchitecture.Core.Interfaces.MailServices;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Core.Domain.Entities.BookAggregate.Events
@@ -23,10 +24,12 @@ namespace CleanArchitecture.Core.Domain.Entities.BookAggregate.Events
     internal class BookCreatedEventHandler : INotificationHandler<BookCreatedEvent>
     {
         private readonly ILogger<BookCreatedEventHandler> _logger;
+        private readonly IEmailService _emailService;
 
-        public BookCreatedEventHandler(ILogger<BookCreatedEventHandler> logger)
+        public BookCreatedEventHandler(ILogger<BookCreatedEventHandler> logger, IEmailService emailService)
         {
             _logger = logger;
+            _emailService = emailService;
         }
 
         public Task Handle(BookCreatedEvent notification, CancellationToken cancellationToken)
@@ -34,6 +37,10 @@ namespace CleanArchitecture.Core.Domain.Entities.BookAggregate.Events
             _logger.LogInformation($"Book Created event: {notification.Book.Id} - {notification.Book.Title} - {notification.Book.Status}");
 
             // Send an email
+            _emailService.SendEmailAsync(
+                "concobebe@gmail.com", 
+                "Book Created", 
+                $"Book Created event: {notification.Book.Id} - {notification.Book.Title} - {notification.Book.Status}");
 
             return Task.CompletedTask;
         }
