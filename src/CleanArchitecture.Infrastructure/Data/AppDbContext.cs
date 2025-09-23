@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Core.Domain.Entities;
 using CleanArchitecture.Core.Domain.Entities.BookAggregate;
+using CleanArchitecture.Core.Domain.Entities.RefreshToken;
 using CleanArchitecture.Infrastructure.Data.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,9 @@ namespace CleanArchitecture.Infrastructure.Data
         public DbSet<ApplicationUser> ApplicatioUsers { get; set; }
         public DbSet<ApplicationRole> ApplicatoinRoles { get; set; }
 
+        // Token
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         // System
         public DbSet<Book> Books { get; set; }
 
@@ -26,8 +30,8 @@ namespace CleanArchitecture.Infrastructure.Data
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            // Book
             builder.ApplyConfiguration(new BookConfiguration());
+            builder.ApplyConfiguration(new RefreshTokenConfiguration());
 
             builder.Seed();
         }

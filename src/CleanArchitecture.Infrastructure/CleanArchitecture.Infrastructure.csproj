@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
 	  <!--Use this to call AddIdentity in the ConfigurationServices--> 
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
