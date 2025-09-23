@@ -1,8 +1,10 @@
-﻿using CleanArchitecture.Core.Interfaces.AuthServices;
+﻿using CleanArchitecture.Core.Interfaces.AuditLoginServices;
+using CleanArchitecture.Core.Interfaces.AuthServices;
 using CleanArchitecture.Core.Interfaces.BookServices;
 using CleanArchitecture.Core.Interfaces.CookieServices;
 using CleanArchitecture.Core.Interfaces.MailServices;
 using CleanArchitecture.Core.Interfaces.TokenService;
+using CleanArchitecture.Core.Services.AuditLoginSerivces;
 using CleanArchitecture.Core.Services.AuthServices;
 using CleanArchitecture.Core.Services.BookServices;
 using CleanArchitecture.Core.Services.CookieServices;
@@ -21,6 +23,9 @@ namespace CleanArchitecture.Core
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<ICookieService, CookieService>();
+
+            // Log
+            services.AddTransient<IAuditLoginService, AuditLoginService>();
 
             //Book
             services.AddTransient<IListBooksByPagingService, ListBooksByPagingService>();

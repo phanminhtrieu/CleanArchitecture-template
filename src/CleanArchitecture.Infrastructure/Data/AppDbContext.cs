@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Core.Domain.Entities;
+using CleanArchitecture.Core.Domain.Entities.AuditLogin;
 using CleanArchitecture.Core.Domain.Entities.BookAggregate;
 using CleanArchitecture.Core.Domain.Entities.RefreshToken;
 using CleanArchitecture.Infrastructure.Data.Configurations;
@@ -22,6 +23,9 @@ namespace CleanArchitecture.Infrastructure.Data
         // Token
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+        // Log
+        public DbSet<AuditLogin> AuditLogins { get; set; }
+
         // System
         public DbSet<Book> Books { get; set; }
 
@@ -32,6 +36,7 @@ namespace CleanArchitecture.Infrastructure.Data
 
             builder.ApplyConfiguration(new BookConfiguration());
             builder.ApplyConfiguration(new RefreshTokenConfiguration());
+            builder.ApplyConfiguration(new AuditLoginConfiguration());
 
             builder.Seed();
         }
