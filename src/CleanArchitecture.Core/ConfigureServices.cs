@@ -1,7 +1,13 @@
-﻿using CleanArchitecture.Core.Interfaces.BookServices;
+﻿using CleanArchitecture.Core.Interfaces.AuthServices;
+using CleanArchitecture.Core.Interfaces.BookServices;
+using CleanArchitecture.Core.Interfaces.CookieServices;
 using CleanArchitecture.Core.Interfaces.MailServices;
+using CleanArchitecture.Core.Interfaces.TokenService;
+using CleanArchitecture.Core.Services.AuthServices;
 using CleanArchitecture.Core.Services.BookServices;
+using CleanArchitecture.Core.Services.CookieServices;
 using CleanArchitecture.Core.Services.MailServices;
+using CleanArchitecture.Core.Services.TokenService;
 using CleanArchitecture.Shared;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +17,11 @@ namespace CleanArchitecture.Core
     {
         public static IServiceCollection AddApplicationServiceDI(this IServiceCollection services, AppSettings appSettings)
         {
-            // Application Service
+            // Auth
+            services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<ICookieService, CookieService>();
+
             //Book
             services.AddTransient<IListBooksByPagingService, ListBooksByPagingService>();
             services.AddTransient<IListBooksService, ListBooksService>();
