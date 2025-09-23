@@ -1,5 +1,7 @@
 ﻿using CleanArchitecture.Core.Domain.Entities;
+using CleanArchitecture.Core.Domain.Models.AuditLogins;
 using CleanArchitecture.Core.Domain.Models.Auth;
+using CleanArchitecture.Core.Interfaces.AuditLoginServices;
 using CleanArchitecture.Core.Interfaces.AuthServices;
 using CleanArchitecture.Core.Interfaces.CookieServices;
 using CleanArchitecture.Core.Interfaces.TokenService;
@@ -13,6 +15,7 @@ namespace CleanArchitecture.Core.Services.AuthServices
 {
     public class AuthService(
         UserManager<ApplicationUser> _userManager,
+        IAuditLoginService _auditLoginService,
         ITokenService _tokenService, 
         IHttpContextAccessor _httpContextAccessor,
         ICookieService _cookieService) : IAuthService
@@ -72,22 +75,46 @@ namespace CleanArchitecture.Core.Services.AuthServices
 
         public async Task<ApiResult<UserSignInResponse>> SignIn(UserSignInRequest request)
         {
+            var auditLoginRequest = new AuditLoginRequest()
+            {
+                UserId = string.Empty,
+                UserName = request.UserName,
+                IsSuccessded = false,
+            };
+
+            var auditLoginId = default(int);
+
+            // Just can only signin by UserName
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) throw UserException.UserUnauthorizedException();
+            if (user == null)
+            {
+                auditLoginRequest.Notes = "User not exist";
+                auditLoginId = await this.SaveUserAuditLogin(auditLoginRequest);
+
+                return new ApiErrorResult<UserSignInResponse>();
+            }
 
             var isValidPassword = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (!isValidPassword) throw UserException.UserUnauthorizedException();
+            if (!isValidPassword) 
+            {
+                auditLoginRequest.Notes = "Invalid password";
+                auditLoginId = await this.SaveUserAuditLogin(auditLoginRequest);
+
+                return new ApiResult<UserSignInResponse>();
+            }
+
+            auditLoginRequest.UserId = user.Id.ToString();
+            auditLoginRequest.IsSuccessded = true;
+            auditLoginRequest.Notes = "User sign in successfully";
+
+            auditLoginId = await this.SaveUserAuditLogin(auditLoginRequest);
 
             var token = _tokenService.GenerateToken(user);
             _cookieService.Set(token);
 
-            var response = new UserSignInResponse
-            {
-                UserName = user.UserName!,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                Token = token
-            };
+            await this.UpdateUserLastSignInDate(user);
+
+            var response = this.MapToResponse(user, token, auditLoginId);
 
             return new ApiSuccessResult<UserSignInResponse>(response);
         }
@@ -99,25 +126,6 @@ namespace CleanArchitecture.Core.Services.AuthServices
 
             var isEmailExists = await _userManager.FindByEmailAsync(request.Email) != null;
             if (isEmailExists) throw UserException.UserAlreadyExistsException("Email");
-
-            //using var transaction = await _unitOfWork.BeginTransactionAsync(cancellatoinToken);
-            //try
-            //{
-            //    var user = await _userManager.CreateAsync(new ApplicationUser
-            //    {
-            //        UserName = request.UserName,
-            //        Email = request.Email,
-            //        FirstName = request.FirstName,
-            //        LastName = request.LastName,
-            //        SecurityStamp = Guid.NewGuid().ToString()
-            //    }, request.Password);
-
-            //    await transaction.CommitAsync();
-            //}
-            //catch
-            //{
-            //    throw UserException.InternalServerException();
-            //}
 
             var user = new ApplicationUser
             {
@@ -146,6 +154,36 @@ namespace CleanArchitecture.Core.Services.AuthServices
             };
 
             return new ApiSuccessResult<UserSignUpResponse>(response);
+        }
+
+        private async Task<int> SaveUserAuditLogin(AuditLoginRequest auditLogin)
+        {
+            var result = await _auditLoginService.AddAsync(auditLogin);
+            if (!result.IsSucceeded) throw new Exception("Save audit login fail");
+
+            return result.ResultObj;
+        }
+
+        private UserSignInResponse MapToResponse(ApplicationUser user, string token, int auditLoginId)
+        {
+            var response = new UserSignInResponse
+            {
+                UserName = user.UserName!,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                AuditLoginId = auditLoginId,
+                Token = token
+            };
+
+            return response;
+        }
+
+        private async Task UpdateUserLastSignInDate(ApplicationUser user)
+        {
+            user.LastSignInDate = DateTime.UtcNow;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) throw UserException.InternalServerException();
         }
     }
 }
