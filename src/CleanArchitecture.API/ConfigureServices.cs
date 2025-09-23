@@ -2,7 +2,6 @@
 using CleanArchitecture.API.Middlewares;
 using CleanArchitecture.Core.Domain.Authorization;
 using CleanArchitecture.Core.Domain.Entities.BookAggregate;
-using CleanArchitecture.Core.Domain.Models.Books;
 using CleanArchitecture.Core.Interfaces;
 using CleanArchitecture.Infrastructure.Services;
 using CleanArchitecture.Shared;

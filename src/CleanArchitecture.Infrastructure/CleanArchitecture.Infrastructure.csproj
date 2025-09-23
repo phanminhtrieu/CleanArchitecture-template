@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
 	  <!--Use this to call AddIdentity in the ConfigurationServices--> 
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
@@ -27,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CleanArchitecture.Shared\CleanArchitecture.Shared.csproj" />
     <ProjectReference Include="..\CleanArchitecture.Core\CleanArchitecture.Core.csproj" />
   </ItemGroup>
 

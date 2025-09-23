@@ -22,7 +22,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CleanArchitecture.Core.Entities.ApplicationRole", b =>
+            modelBuilder.Entity("CleanArchitecture.Core.Domain.Entities.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Core.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("CleanArchitecture.Core.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,6 +58,10 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -69,6 +73,17 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSignInDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -116,7 +131,47 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Core.Entities.BookAggregate.Book", b =>
+            modelBuilder.Entity("CleanArchitecture.Core.Domain.Entities.AuditLogin.AuditLogin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSuccessded")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLogins", (string)null);
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Core.Domain.Entities.BookAggregate.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,6 +185,37 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books", (string)null);
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Core.Domain.Entities.RefreshToken.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Revoked")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -235,14 +321,14 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Core.Entities.BookAggregate.Book", b =>
+            modelBuilder.Entity("CleanArchitecture.Core.Domain.Entities.BookAggregate.Book", b =>
                 {
-                    b.OwnsOne("CleanArchitecture.Core.Entities.BookAggregate.BookAuthor", "Author", b1 =>
+                    b.OwnsOne("CleanArchitecture.Core.Domain.Entities.BookAggregate.BookAuthor", "Author", b1 =>
                         {
                             b1.Property<int>("BookId")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("Author")
+                            b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Author");
@@ -255,12 +341,12 @@ namespace CleanArchitecture.Infrastructure.Migrations
                                 .HasForeignKey("BookId");
                         });
 
-                    b.OwnsOne("CleanArchitecture.Core.Entities.BookAggregate.BookTitle", "Title", b1 =>
+                    b.OwnsOne("CleanArchitecture.Core.Domain.Entities.BookAggregate.BookTitle", "Title", b1 =>
                         {
                             b1.Property<int>("BookId")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("Title")
+                            b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Title");
@@ -280,9 +366,20 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Core.Domain.Entities.RefreshToken.RefreshToken", b =>
+                {
+                    b.HasOne("CleanArchitecture.Core.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Core.Entities.ApplicationRole", null)
+                    b.HasOne("CleanArchitecture.Core.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -291,7 +388,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Core.Entities.ApplicationUser", null)
+                    b.HasOne("CleanArchitecture.Core.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -300,7 +397,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Core.Entities.ApplicationUser", null)
+                    b.HasOne("CleanArchitecture.Core.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -309,13 +406,13 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Core.Entities.ApplicationRole", null)
+                    b.HasOne("CleanArchitecture.Core.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CleanArchitecture.Core.Entities.ApplicationUser", null)
+                    b.HasOne("CleanArchitecture.Core.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -324,7 +421,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Core.Entities.ApplicationUser", null)
+                    b.HasOne("CleanArchitecture.Core.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

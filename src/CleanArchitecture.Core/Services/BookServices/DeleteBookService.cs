@@ -1,9 +1,11 @@
-﻿using CleanArchitecture.Core.Domain.Entities.BookAggregate.Specifications;
+﻿using CleanArchitecture.Core.Domain.Entities.BookAggregate.Events;
+using CleanArchitecture.Core.Domain.Entities.BookAggregate.Specifications;
 using CleanArchitecture.Core.Interfaces.BookServices;
 using CleanArchitecture.Core.Repositories;
 using CleanArchitecture.Core.UnitOfWork;
 using CleanArchitecture.Shared.Common.Exceptions;
 using CleanArchitecture.Shared.CrossCuttingConcerns.Dtos.Results;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Core.Services.BookServices
@@ -11,7 +13,8 @@ namespace CleanArchitecture.Core.Services.BookServices
     public class DeleteBookService(
         IBookRepository _bookRepository,
         IUnitOfWork _unitOfWork,
-        ILogger<DeleteBookService> _logger) : IDeleteBookService
+        ILogger<DeleteBookService> _logger,
+        IMediator _mediator) : IDeleteBookService
     {
         public async Task<ApiResult<int>> DeleteBookAsync(int bookId, CancellationToken cancellationToken)
         {
@@ -31,7 +34,11 @@ namespace CleanArchitecture.Core.Services.BookServices
 
             _bookRepository.Remove(bookId);
 
-            return new ApiSuccessResult<int>(await _unitOfWork.SaveChangesAsync(cancellationToken));
+            var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _mediator.Publish(new BookDeletedEvent(bookId));
+
+            return new ApiSuccessResult<int>(result);
         }
     }
 }

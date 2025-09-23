@@ -49,6 +49,8 @@ namespace CleanArchitecture.Infrastructure
 
             // Inject repositories
             services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddTransient<IAuditLoginRepository, AuditLoginRepository>();
 
             return services;
         }

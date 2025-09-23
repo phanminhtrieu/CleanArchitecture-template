@@ -14,18 +14,29 @@ namespace CleanArchitecture.API.Extensions
             var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
             authenticationBuilder.AddJwtBearer($"{JwtBearerDefaults.AuthenticationScheme}_{identitySettings.Issuer}", options =>
             {
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Cookies["token_key"];
+
+                        if (!string.IsNullOrEmpty(token))
+                            context.Token = token;
+
+                        return Task.CompletedTask;
+                    }
+                };
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateLifetime = true,
                     ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
                     ValidIssuer = identitySettings.Issuer,
                     ValidAudience = identitySettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(identitySettings.Key)),
-                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(identitySettings.Key))
                 };
-                options.Authority = identitySettings.Issuer;
-                options.RequireHttpsMetadata = identitySettings.ValidateHttps;
             });
 
             //custom policy scheme using AddPolicyScheme in ASP.NET Core, it allows you to dynamically choose an authentication scheme based on the incoming request. This is useful if you have multiple authentication methods (e.g., JWT Bearer, Cookies, etc.)

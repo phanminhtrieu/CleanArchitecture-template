@@ -2,7 +2,6 @@
 using CleanArchitecture.UseCases.Books;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 
 namespace CleanArchitecture.API.Controllers.Backoffice
 {
@@ -26,7 +25,7 @@ namespace CleanArchitecture.API.Controllers.Backoffice
         {
             var result = await _mediator.Send(new ListBookByPagingQuery(request), cancellationToken);
 
-            if(result.IsSucceeded) return BadRequest(result);
+            if(!result.IsSucceeded) return BadRequest(result);
             return Ok(result);
         }
 
@@ -40,7 +39,7 @@ namespace CleanArchitecture.API.Controllers.Backoffice
         {
             var result = await _mediator.Send(new ListBooksQuery(), cancellationToken);
 
-            if (result.IsSucceeded) return BadRequest(result);
+            if (!result.IsSucceeded) return BadRequest(result);
             return Ok(result);
         }
 
@@ -55,7 +54,7 @@ namespace CleanArchitecture.API.Controllers.Backoffice
         {
             var result = await _mediator.Send(new GetBookByIdQuery(id), cancellationToken);
 
-            if (result.IsSucceeded) return BadRequest(result);
+            if (!result.IsSucceeded) return BadRequest(result);
             return Ok(result);
         }
 
@@ -68,7 +67,7 @@ namespace CleanArchitecture.API.Controllers.Backoffice
         {
             var result = await _mediator.Send(new CreateBookCommand(request), cancellationToken);
 
-            if (result.IsSucceeded) return BadRequest(result);
+            if (!result.IsSucceeded) return BadRequest(result);
             return Ok(result);
         }
 
@@ -99,7 +98,7 @@ namespace CleanArchitecture.API.Controllers.Backoffice
         {
             var result = await _mediator.Send(new DeleteBookCommand(id), cancellationToken);
 
-            if (result.IsSucceeded) return BadRequest(result);
+            if (!result.IsSucceeded) return BadRequest(result);
             return Ok(result);
         }
     }
